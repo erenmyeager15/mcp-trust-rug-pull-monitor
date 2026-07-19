@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">MCP Trust Monitor shield</title>
+  <desc id="desc">A text-free shield containing a radar sweep and connected security nodes.</desc>
+  <defs>
+    <linearGradient id="background" x1="72" y1="56" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#101D3A"/>
+      <stop offset="1" stop-color="#050B17"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="132" y1="96" x2="382" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#19D3C5" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#4C7DFF" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="178" y1="156" x2="342" y2="344" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4CF1D5"/>
+      <stop offset="1" stop-color="#5B8CFF"/>
+    </linearGradient>
+    <radialGradient id="sweep" cx="0" cy="0" r="1" gradientTransform="translate(256 246) rotate(36) scale(166)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4CF1D5" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#4CF1D5" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="shieldClip">
+      <path d="M256 67 407 126v112c0 96-58 168-151 207-93-39-151-111-151-207V126L256 67Z"/>
+    </clipPath>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#background)"/>
+  <circle cx="256" cy="250" r="188" fill="none" stroke="#21365D" stroke-width="2" opacity="0.55"/>
+  <circle cx="256" cy="250" r="166" fill="none" stroke="#142744" stroke-width="2" stroke-dasharray="5 12" opacity="0.7"/>
+
+  <path d="M256 67 407 126v112c0 96-58 168-151 207-93-39-151-111-151-207V126L256 67Z" fill="url(#shield)" stroke="url(#accent)" stroke-width="11" stroke-linejoin="round"/>
+
+  <g clip-path="url(#shieldClip)">
+    <path d="M256 246 401 141A179 179 0 0 1 421 324Z" fill="url(#sweep)"/>
+    <circle cx="256" cy="246" r="62" fill="none" stroke="#60E8D5" stroke-width="4" opacity="0.46"/>
+    <circle cx="256" cy="246" r="116" fill="none" stroke="#60E8D5" stroke-width="4" opacity="0.28"/>
+    <path d="M256 246 372 162" fill="none" stroke="#67F4DC" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+
+    <g fill="none" stroke="#8AAEFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m183 291 73-45 77 58"/>
+      <path d="m206 182 50 64 67-24"/>
+    </g>
+
+    <g fill="#071526" stroke="url(#accent)" stroke-width="8" filter="url(#glow)">
+      <circle cx="183" cy="291" r="15"/>
+      <circle cx="206" cy="182" r="15"/>
+      <circle cx="256" cy="246" r="19"/>
+      <circle cx="323" cy="222" r="15"/>
+      <circle cx="333" cy="304" r="15"/>
+    </g>
+
+    <path d="m227 360 22 22 43-51" fill="none" stroke="#69F2D9" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  </g>
+
+  <path d="M256 88 386 139v99c0 83-48 144-130 181-82-37-130-98-130-181v-99L256 88Z" fill="none" stroke="#D3FFF8" stroke-width="3" opacity="0.22"/>
+</svg>
