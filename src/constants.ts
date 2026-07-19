@@ -1,0 +1,12 @@
+export const NORMALIZER_VERSION = '1.1.0';
+export const RISK_RULES_VERSION = '1.1.0';
+export const MAX_SERVERS = 25;
+export const MAX_HEADER_BYTES = 8_192;
+export const MAX_DESCRIPTION_LENGTH = 20_000;
+export const MAX_JSON_DEPTH = 64;
+export const DEFAULT_MAX_RESPONSE_BYTES = 1_048_576;
+export const MAX_MCP_COLLECTION_PAGES = 5;
+export const MAX_MCP_COLLECTION_ITEMS = 1_000;
+export const MAX_MCP_REQUESTS_PER_SERVER = 20;
+export const MAX_SERVER_WALL_CLOCK_MS = 300_000;
+export const PRIVATE_NETWORK_MESSAGE = 'Private, loopback, link-local, cloud metadata, and non-HTTP(S) targets are not supported by this hosted MVP.';

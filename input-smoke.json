@@ -1,0 +1,25 @@
+{
+  "authorizedUseConfirmed": true,
+  "servers": [
+    {
+      "name": "public-mcp-fixture-smoke",
+      "url": "https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/src/__fixtures__/mcp-manifest.json",
+      "transport": "static_json",
+      "enabled": true,
+      "tags": ["cloud-smoke"]
+    }
+  ],
+  "baselineMode": "compare_only",
+  "minimumAlertSeverity": "critical",
+  "checkVulnerabilities": false,
+  "checkTls": false,
+  "includeRawNormalizedSnapshot": false,
+  "requestTimeoutSeconds": 3,
+  "maxRetries": 0,
+  "concurrency": 1,
+  "dryRun": true,
+  "promoteCandidateBaseline": false,
+  "allowHttp": false,
+  "allowPrivateNetwork": false,
+  "maxResponseBytes": 16384
+}

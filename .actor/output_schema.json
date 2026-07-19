@@ -1,0 +1,26 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "MCP trust monitoring output",
+  "description": "Per-server trust reports plus the trusted and candidate baseline records that mutating modes persist in the default Key-Value Store.",
+  "type": "object",
+  "properties": {
+    "reports": {
+      "type": "string",
+      "title": "Server trust reports",
+      "description": "One structured, redacted monitoring report per enabled server in the default Dataset.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "trustedBaselines": {
+      "type": "string",
+      "title": "Trusted baselines",
+      "description": "Trusted normalized baseline records created only by an explicitly selected mutating mode or exact candidate promotion.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/keys?collection=trustedBaselines"
+    },
+    "candidateBaselines": {
+      "type": "string",
+      "title": "Candidate baselines",
+      "description": "Candidate normalized baseline records retained for review until replaced by an ordinary candidate-writing run or consumed by a successful exact-lineage promotion.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/keys?collection=candidateBaselines"
+    }
+  }
+}

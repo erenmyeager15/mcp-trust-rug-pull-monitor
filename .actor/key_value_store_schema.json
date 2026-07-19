@@ -1,0 +1,53 @@
+{
+  "actorKeyValueStoreSchemaVersion": 1,
+  "title": "MCP baseline state",
+  "description": "Versioned trusted and candidate normalized metadata baselines. Header values and input credentials are not stored in these records. Cross-run mutation ownership is provided by dedicated Apify Request Queues, not advisory KVS records.",
+  "collections": {
+    "trustedBaselines": {
+      "title": "Trusted baselines",
+      "description": "Trusted redacted snapshots used for future drift comparisons.",
+      "keyPrefix": "trusted-baseline-v1-",
+      "contentTypes": ["application/json"],
+      "jsonSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "storageSchemaVersion": { "type": "integer", "const": 1 },
+          "normalizerVersion": { "type": "string" },
+          "riskRulesVersion": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "lastSuccessfulComparisonAt": { "type": "string", "format": "date-time" },
+          "lastResultStatus": { "type": "string" },
+          "snapshotHash": { "type": "string" },
+          "endpointIdentityHash": { "type": "string" },
+          "snapshot": { "type": "object" }
+        },
+        "required": ["storageSchemaVersion", "normalizerVersion", "riskRulesVersion", "createdAt", "lastResultStatus", "snapshotHash", "snapshot"]
+      }
+    },
+    "candidateBaselines": {
+      "title": "Candidate baselines",
+      "description": "Redacted snapshots held separately for human review. Each candidate records the exact trusted parent snapshot hash, or null when no trusted parent existed, and is deleted after successful exact-lineage promotion.",
+      "keyPrefix": "candidate-baseline-v1-",
+      "contentTypes": ["application/json"],
+      "jsonSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "storageSchemaVersion": { "type": "integer", "const": 1 },
+          "normalizerVersion": { "type": "string" },
+          "riskRulesVersion": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "lastSuccessfulComparisonAt": { "type": "string", "format": "date-time" },
+          "lastResultStatus": { "type": "string" },
+          "snapshotHash": { "type": "string" },
+          "endpointIdentityHash": { "type": "string" },
+          "trustedParentSnapshotHash": { "type": ["string", "null"] },
+          "promotionTargetSnapshotHash": { "type": "string" },
+          "snapshot": { "type": "object" }
+        },
+        "required": ["storageSchemaVersion", "normalizerVersion", "riskRulesVersion", "createdAt", "lastResultStatus", "snapshotHash", "endpointIdentityHash", "trustedParentSnapshotHash", "snapshot"]
+      }
+    }
+  }
+}

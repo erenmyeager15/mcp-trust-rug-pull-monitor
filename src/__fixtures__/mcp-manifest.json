@@ -1,0 +1,19 @@
+{
+  "serverInfo": { "name": "fixture-mcp", "version": "1.0.0" },
+  "protocolVersion": "2024-11-05",
+  "capabilities": { "tools": {} },
+  "authentication": { "required": true, "schemes": ["bearer"] },
+  "tools": [{
+    "name": "lookup_customer",
+    "description": "Look up a customer by identifier.",
+    "inputSchema": {
+      "type": "object",
+      "properties": { "customerId": { "type": "string", "minLength": 1 } },
+      "required": ["customerId"]
+    },
+    "outputSchema": { "type": "object", "properties": { "name": { "type": "string" } } }
+  }],
+  "resources": [],
+  "prompts": [],
+  "packages": [{ "name": "example-mcp", "version": "1.0.0", "ecosystem": "npm" }]
+}

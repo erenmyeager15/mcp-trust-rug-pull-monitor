@@ -1,0 +1,23 @@
+{
+  "actorSpecification": 1,
+  "name": "mcp-trust-rug-pull-monitor",
+  "title": "MCP Trust & Rug-Pull Monitor",
+  "description": "Defensive metadata-only monitoring of authorized public MCP servers for security-relevant change.",
+  "version": "1.0.0",
+  "dockerfile": "Dockerfile",
+  "input": "../INPUT_SCHEMA.json",
+  "output": "./output_schema.json",
+  "readme": "../README.md",
+  "categories": ["DEVELOPER_TOOLS", "SECURITY", "AUTOMATION"],
+  "storages": {
+    "dataset": "./dataset_schema.json",
+    "keyValueStore": "./key_value_store_schema.json"
+  },
+  "defaultRunOptions": {
+    "build": "latest",
+    "memoryMbytes": 512,
+    "timeoutSecs": 3600
+  },
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 2048
+}

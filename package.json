@@ -1,0 +1,30 @@
+{
+  "name": "mcp-trust-rug-pull-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Defensive, metadata-only MCP server trust and security-relevant drift monitor for Apify.",
+  "license": "Apache-2.0",
+  "main": "dist/main.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node ./node_modules/typescript/bin/tsc",
+    "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "lint": "node scripts/lint.mjs",
+    "test": "node ./node_modules/typescript/bin/tsc && node --test dist/normalize-diff.test.js dist/monitor.test.js dist/security.integration.test.js",
+    "test:unit": "node ./node_modules/typescript/bin/tsc && node --test dist/normalize-diff.test.js dist/monitor.test.js",
+    "test:integration": "node ./node_modules/typescript/bin/tsc && node --test dist/security.integration.test.js",
+    "smoke": "node ./node_modules/typescript/bin/tsc && node dist/smoke.js",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "apify": "3.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "typescript": "5.9.2"
+  },
+  "overrides": {
+    "adm-zip": "0.6.0"
+  }
+}

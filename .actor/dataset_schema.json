@@ -1,0 +1,407 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+      "severity": {
+        "type": "string",
+        "enum": ["informational", "low", "medium", "high", "critical"]
+      },
+      "changesBySeverity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "informational": { "type": "integer", "minimum": 0 },
+          "low": { "type": "integer", "minimum": 0 },
+          "medium": { "type": "integer", "minimum": 0 },
+          "high": { "type": "integer", "minimum": 0 },
+          "critical": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["informational", "low", "medium", "high", "critical"]
+      },
+      "tls": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "protocol": { "type": "string" },
+          "validFrom": { "type": "string" },
+          "validTo": { "type": "string" },
+          "daysRemaining": { "type": "integer" },
+          "authorized": { "type": "boolean" },
+          "authorizationError": { "type": "string" },
+          "subject": { "type": "string" },
+          "issuer": { "type": "string" },
+          "hostname": { "type": "string" }
+        }
+      },
+      "package": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "ecosystem": { "type": "string" }
+        },
+        "required": ["name", "version"]
+      },
+      "change": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "category": { "type": "string" },
+          "entityType": { "type": "string", "enum": ["server", "tool", "resource", "prompt", "package", "tls"] },
+          "entityName": { "type": "string" },
+          "jsonPath": { "type": "string" },
+          "previousValue": { "type": ["object", "array", "string", "number", "boolean", "null"] },
+          "currentValue": { "type": ["object", "array", "string", "number", "boolean", "null"] },
+          "severity": { "$ref": "#/definitions/severity" },
+          "riskScoreContribution": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "ruleId": { "type": "string" },
+          "explanation": { "type": "string" },
+          "recommendedAction": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+        },
+        "required": ["id", "category", "entityType", "entityName", "severity", "riskScoreContribution", "ruleId", "explanation", "recommendedAction", "evidence", "confidence"]
+      },
+      "vulnerability": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "package": { "$ref": "#/definitions/package" },
+          "id": { "type": "string" },
+          "summary": { "type": "string" },
+          "severity": { "$ref": "#/definitions/severity" },
+          "source": { "type": "string", "const": "OSV" },
+          "lookupTimestamp": { "type": "string", "format": "date-time" },
+          "affected": { "type": "boolean" },
+          "unavailable": { "type": "boolean" }
+        },
+        "required": ["package", "id", "severity", "source", "lookupTimestamp", "affected"]
+      },
+      "normalizedSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schemaVersion": { "type": "integer", "const": 1 },
+          "normalizerVersion": { "type": "string" },
+          "server": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "origin": { "type": "string", "format": "uri" },
+              "identity": { "type": "string" },
+              "version": { "type": "string" },
+              "protocolVersion": { "type": "string" },
+              "capabilities": { "type": "array", "items": { "type": "string" } },
+              "authentication": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "required": { "type": "boolean" },
+                  "schemes": { "type": "array", "items": { "type": "string" } },
+                  "scopes": { "type": "array", "items": { "type": "string" } },
+                  "permissions": { "type": "array", "items": { "type": "string" } },
+                  "capabilities": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "contentType": { "type": "string" }
+            },
+            "required": ["name", "origin", "capabilities", "authentication"]
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "inputSchema": { "type": "object" },
+                "outputSchema": { "type": "object" },
+                "annotations": { "type": "object" }
+              },
+              "required": ["name", "description", "inputSchema"]
+            }
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "uriTemplate": { "type": "string" },
+                "uri": { "type": "string" },
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "mimeType": { "type": "string" }
+              },
+              "required": ["name"]
+            }
+          },
+          "prompts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "text": { "type": "string" },
+                "arguments": { "type": ["object", "array", "string", "number", "boolean", "null"] }
+              },
+              "required": ["name"]
+            }
+          },
+          "packages": { "type": "array", "items": { "$ref": "#/definitions/package" } },
+          "tls": { "$ref": "#/definitions/tls" }
+        },
+        "required": ["schemaVersion", "normalizerVersion", "server", "tools", "resources", "prompts", "packages"]
+      }
+    },
+    "properties": {
+      "serverName": {
+        "type": "string",
+        "title": "Server name",
+        "description": "Redacted configured name of the inspected server."
+      },
+      "serverUrl": {
+        "type": "string",
+        "title": "Server URL",
+        "description": "Redacted MCP metadata endpoint URL.",
+        "format": "uri"
+      },
+      "status": {
+        "type": "string",
+        "title": "Run status",
+        "description": "Structured outcome of inspection, comparison, or baseline handling.",
+        "enum": ["success_no_change", "success_changed", "baseline_initialized", "candidate_baseline_initialized", "baseline_missing", "promotion_mismatch", "authorization_required", "unreachable", "authentication_failed", "unsupported_transport", "invalid_response", "inspection_incomplete", "rate_limited", "timeout", "internal_error"]
+      },
+      "reachable": {
+        "type": "boolean",
+        "title": "Reachable",
+        "description": "Whether an HTTP response or successful metadata inspection established endpoint reachability."
+      },
+      "transport": {
+        "type": "string",
+        "title": "Transport",
+        "description": "Concrete metadata transport used or attempted.",
+        "enum": ["streamable_http", "http_sse", "static_json"]
+      },
+      "baselineFound": {
+        "type": "boolean",
+        "title": "Trusted baseline found",
+        "description": "Whether a compatible trusted baseline was available for this report."
+      },
+      "previousSnapshotHash": {
+        "type": "string",
+        "title": "Previous snapshot hash",
+        "description": "Stable hash of the trusted snapshot used for comparison."
+      },
+      "currentSnapshotHash": {
+        "type": "string",
+        "title": "Current snapshot hash",
+        "description": "Stable hash of the current normalized snapshot."
+      },
+      "overallSeverity": {
+        "$ref": "#/definitions/severity",
+        "title": "Overall severity",
+        "description": "Highest deterministic severity represented by the report."
+      },
+      "riskScore": {
+        "type": "integer",
+        "title": "Risk score",
+        "description": "Bounded deterministic risk score from zero to 100.",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "changeCount": {
+        "type": "integer",
+        "title": "Change count",
+        "description": "Number of classified changes and runtime findings.",
+        "minimum": 0
+      },
+      "changesBySeverity": {
+        "$ref": "#/definitions/changesBySeverity",
+        "title": "Changes by severity",
+        "description": "Counts of classified changes at every severity."
+      },
+      "changes": {
+        "type": "array",
+        "title": "Changes",
+        "description": "Deterministic, redacted change records with evidence and recommendations.",
+        "items": { "$ref": "#/definitions/change" }
+      },
+      "vulnerabilities": {
+        "type": "array",
+        "title": "Vulnerability matches",
+        "description": "OSV lookup outcomes for explicitly identified packages, including bounded unavailable records.",
+        "items": { "$ref": "#/definitions/vulnerability" }
+      },
+      "tls": {
+        "$ref": "#/definitions/tls",
+        "title": "TLS metadata",
+        "description": "Sanitized certificate, hostname, expiry, and protocol metadata when TLS inspection ran."
+      },
+      "recommendedAction": {
+        "type": "string",
+        "title": "Recommended action",
+        "description": "Human-review or remediation recommendation for the report outcome."
+      },
+      "baselineUpdated": {
+        "type": "boolean",
+        "title": "Trusted baseline updated",
+        "description": "Whether this run created, updated, or promoted the trusted baseline."
+      },
+      "candidateBaselineStored": {
+        "type": "boolean",
+        "title": "Candidate stored",
+        "description": "Whether this run stored a separate candidate baseline for later review."
+      },
+      "inspectedAt": {
+        "type": "string",
+        "title": "Inspected at",
+        "description": "UTC timestamp associated with the server inspection.",
+        "format": "date-time"
+      },
+      "checkedAt": {
+        "type": "string",
+        "title": "Checked at",
+        "description": "UTC timestamp associated with the completed monitoring report.",
+        "format": "date-time"
+      },
+      "rawNormalizedSnapshot": {
+        "$ref": "#/definitions/normalizedSnapshot",
+        "title": "Normalized snapshot",
+        "description": "Optional redacted canonical snapshot included only when explicitly requested."
+      },
+      "inspection": {
+        "type": "object",
+        "title": "Inspection metadata",
+        "description": "Bounded response status, latency, content type, and validated redirect origins.",
+        "additionalProperties": false,
+        "properties": {
+          "httpStatus": { "type": "integer", "minimum": 100, "maximum": 599 },
+          "latencyMs": { "type": "integer", "minimum": 0 },
+          "contentType": { "type": "string" },
+          "redirectOrigins": { "type": "array", "items": { "type": "string", "format": "uri" } }
+        }
+      },
+      "webhook": {
+        "type": "object",
+        "title": "Webhook delivery",
+        "description": "Optional post-persistence webhook result. The current Actor writes the Dataset item before delivery, so this late field is normally absent from the persisted item.",
+        "additionalProperties": false,
+        "properties": {
+          "attempted": { "type": "boolean" },
+          "delivered": { "type": "boolean" },
+          "status": { "type": "integer", "minimum": 100, "maximum": 599 },
+          "error": { "type": "string" }
+        },
+        "required": ["attempted", "delivered"]
+      },
+      "ppe": {
+        "type": "object",
+        "title": "PPE outcome",
+        "description": "Optional post-persistence charging outcome. The current Actor charges only after the Dataset write, so this late field is normally absent from the persisted item.",
+        "additionalProperties": false,
+        "properties": {
+          "chargedEvents": { "type": "array", "items": { "type": "string" } },
+          "failedEvents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "eventName": { "type": "string" },
+                "error": { "type": "string" }
+              },
+              "required": ["eventName", "error"]
+            }
+          }
+        },
+        "required": ["chargedEvents"]
+      },
+      "persistence": {
+        "type": "object",
+        "title": "Dataset persistence",
+        "description": "Persistence marker written with a successfully stored Dataset report.",
+        "additionalProperties": false,
+        "properties": {
+          "succeeded": { "type": "boolean" },
+          "error": { "type": "string" }
+        },
+        "required": ["succeeded"]
+      },
+      "error": {
+        "type": "object",
+        "title": "Structured error",
+        "description": "Redacted machine-readable failure or safety-stop detail.",
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "reason": {
+            "type": "string",
+            "enum": ["candidate_missing", "candidate_incompatible", "current_snapshot_mismatch", "endpoint_identity_mismatch", "trusted_parent_mismatch", "trusted_baseline_incompatible", "dry_run"]
+          }
+        },
+        "required": ["code", "message"]
+      }
+    },
+    "required": ["serverName", "serverUrl", "status", "reachable", "baselineFound", "overallSeverity", "riskScore", "changeCount", "changesBySeverity", "changes", "vulnerabilities", "recommendedAction", "baselineUpdated", "candidateBaselineStored", "inspectedAt", "checkedAt", "persistence"]
+  },
+  "views": {
+    "overview": {
+      "title": "Server trust overview",
+      "description": "Prioritized status, risk, and baseline state for every enabled server.",
+      "transformation": {
+        "fields": ["serverName", "serverUrl", "status", "reachable", "transport", "baselineFound", "overallSeverity", "riskScore", "changeCount", "recommendedAction", "baselineUpdated", "candidateBaselineStored", "checkedAt"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "serverName": { "label": "Server", "format": "text" },
+          "serverUrl": { "label": "Endpoint", "format": "link" },
+          "status": { "label": "Status", "format": "text" },
+          "reachable": { "label": "Reachable", "format": "boolean" },
+          "transport": { "label": "Transport", "format": "text" },
+          "baselineFound": { "label": "Baseline", "format": "boolean" },
+          "overallSeverity": { "label": "Severity", "format": "text" },
+          "riskScore": { "label": "Risk score", "format": "number" },
+          "changeCount": { "label": "Changes", "format": "number" },
+          "recommendedAction": { "label": "Recommended action", "format": "text" },
+          "baselineUpdated": { "label": "Trusted updated", "format": "boolean" },
+          "candidateBaselineStored": { "label": "Candidate stored", "format": "boolean" },
+          "checkedAt": { "label": "Checked", "format": "date" }
+        }
+      }
+    },
+    "securityReview": {
+      "title": "Security review detail",
+      "description": "Detailed classified changes, vulnerabilities, TLS evidence, errors, and inspection metadata.",
+      "transformation": {
+        "fields": ["serverName", "status", "overallSeverity", "riskScore", "changesBySeverity", "changes", "vulnerabilities", "tls", "inspection", "error", "checkedAt"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "serverName": { "label": "Server", "format": "text" },
+          "status": { "label": "Status", "format": "text" },
+          "overallSeverity": { "label": "Severity", "format": "text" },
+          "riskScore": { "label": "Risk score", "format": "number" },
+          "changesBySeverity": { "label": "Severity counts", "format": "object" },
+          "changes": { "label": "Changes", "format": "array" },
+          "vulnerabilities": { "label": "OSV results", "format": "array" },
+          "tls": { "label": "TLS", "format": "object" },
+          "inspection": { "label": "Inspection", "format": "object" },
+          "error": { "label": "Error", "format": "object" },
+          "checkedAt": { "label": "Checked", "format": "date" }
+        }
+      }
+    }
+  }
+}
