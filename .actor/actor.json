@@ -3,7 +3,7 @@
   "name": "mcp-trust-rug-pull-monitor",
   "title": "MCP Trust & Rug-Pull Monitor",
   "description": "Defensive metadata-only monitoring of authorized public MCP servers for security-relevant change.",
-  "version": "1.0.0",
+  "version": "1.0",
   "dockerfile": "Dockerfile",
   "input": "../INPUT_SCHEMA.json",
   "output": "./output_schema.json",
