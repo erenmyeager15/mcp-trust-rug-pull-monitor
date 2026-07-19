@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 - 2026-07-19
+- Replaced the placeholder Store prefill with the public, no-secret MCP fixture.
+- Made automated QA use compare-only dry-run settings without TLS, OSV, webhook, baseline, or PPE side effects.
+- Kept normal API defaults conservative and authorization-gated.
+
 ## 1.0.0 — 2026-07-19
 - Initial defensive MCP metadata monitoring MVP.
 - Added public-only Streamable HTTP, legacy HTTP/SSE endpoint discovery, and static JSON manifest inspection.

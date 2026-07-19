@@ -15,11 +15,11 @@
       "maxItems": 25,
       "prefill": [
         {
-          "name": "production-mcp",
-          "url": "https://example.com/mcp",
-          "transport": "auto",
+          "name": "public-mcp-fixture-smoke",
+          "url": "https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/src/__fixtures__/mcp-manifest.json",
+          "transport": "static_json",
           "enabled": true,
-          "tags": ["production"]
+          "tags": ["public-demo"]
         }
       ],
       "items": {
@@ -90,7 +90,8 @@
       "title": "Authorization attestation",
       "type": "boolean",
       "description": "Required. Set true only when every target intentionally exposes public metadata, belongs to you, or you have explicit permission to inspect it. False is rejected by the Actor.",
-      "default": false
+      "default": false,
+      "prefill": true
     },
     "baselineMode": {
       "title": "Baseline mode",
@@ -98,6 +99,7 @@
       "description": "Controls trusted baseline persistence. The safe default compare_only never creates or updates a trusted baseline. Choose a mutating mode only after reviewing the endpoint and persistence behavior.",
       "editor": "select",
       "default": "compare_only",
+      "prefill": "compare_only",
       "enum": ["initialize_only", "compare_only", "compare_and_update", "manual_approval"],
       "enumTitles": ["Initialize trusted baseline only", "Compare only (safe default)", "Compare and conditionally update", "Store candidate for manual approval"]
     },
@@ -105,7 +107,8 @@
       "title": "Promote matching candidate",
       "type": "boolean",
       "description": "When true, promote and consume a compatible stored candidate only if its endpoint identity, current snapshot hash, and exact trusted-parent hash (or explicit no-parent state) match the current state. Any mismatch returns promotion_mismatch and preserves both records.",
-      "default": false
+      "default": false,
+      "prefill": false
     },
     "minimumAlertSeverity": {
       "title": "Minimum webhook severity",
@@ -113,6 +116,7 @@
       "description": "Lowest report severity eligible for the optional webhook. Status-specific alert rules still apply, and webhook delivery occurs only after Dataset persistence succeeds.",
       "editor": "select",
       "default": "medium",
+      "prefill": "critical",
       "enum": ["informational", "low", "medium", "high", "critical"],
       "enumTitles": ["Informational", "Low", "Medium", "High", "Critical"]
     },
@@ -129,19 +133,22 @@
       "title": "Check OSV vulnerabilities",
       "type": "boolean",
       "description": "Query the public OSV API only for package identities and versions explicitly exposed by server metadata. Unavailable lookups are reported without fabricating matches.",
-      "default": true
+      "default": true,
+      "prefill": false
     },
     "checkTls": {
       "title": "Inspect TLS metadata",
       "type": "boolean",
       "description": "Inspect HTTPS certificate validity, hostname, expiry, and negotiated protocol metadata before the MCP metadata request.",
-      "default": true
+      "default": true,
+      "prefill": false
     },
     "includeRawNormalizedSnapshot": {
       "title": "Include normalized snapshot",
       "type": "boolean",
       "description": "Include the redacted canonical metadata snapshot in each Dataset report. Leave disabled unless downstream review requires the larger payload.",
-      "default": false
+      "default": false,
+      "prefill": false
     },
     "requestTimeoutSeconds": {
       "title": "Request timeout",
@@ -150,6 +157,7 @@
       "editor": "number",
       "unit": "seconds",
       "default": 20,
+      "prefill": 3,
       "minimum": 1,
       "maximum": 120
     },
@@ -159,6 +167,7 @@
       "description": "Maximum retry count for eligible metadata requests, from zero to four. Authentication and other terminal failures are not retried indefinitely.",
       "editor": "number",
       "default": 2,
+      "prefill": 0,
       "minimum": 0,
       "maximum": 4
     },
@@ -168,6 +177,7 @@
       "description": "Number of enabled servers inspected concurrently, from one to ten.",
       "editor": "number",
       "default": 5,
+      "prefill": 1,
       "minimum": 1,
       "maximum": 10
     },
@@ -175,19 +185,22 @@
       "title": "Dry run",
       "type": "boolean",
       "description": "Inspect and compare without creating, updating, promoting, or replacing trusted or candidate baseline records.",
-      "default": false
+      "default": false,
+      "prefill": true
     },
     "allowHttp": {
       "title": "Allow plain HTTP",
       "type": "boolean",
       "description": "Explicitly opt in to public plain-HTTP targets. Disabled by default because HTTP provides no transport confidentiality or certificate validation.",
-      "default": false
+      "default": false,
+      "prefill": false
     },
     "allowPrivateNetwork": {
       "title": "Allow private networks",
       "type": "boolean",
       "description": "Reserved compatibility field that must remain false. Private, loopback, link-local, metadata-service, local-file, Unix-socket, and stdio targets are unsupported by this hosted Actor.",
-      "default": false
+      "default": false,
+      "prefill": false
     },
     "maxResponseBytes": {
       "title": "Maximum metadata response size",
@@ -196,6 +209,7 @@
       "editor": "number",
       "unit": "bytes",
       "default": 1048576,
+      "prefill": 16384,
       "minimum": 16384,
       "maximum": 5242880
     }
