@@ -39,6 +39,8 @@ then publish each task manually from its **Publication** tab in Apify Console.
 - Dataset view: `overview`
 - Persistent proof KVS: `mcp-trust-baseline-proof-state`
 - Persistent proof Request Queue: `mcp-trust-baseline-proof-locks`
+- The public task preset must not retain the developer's proof storage IDs. Visitors
+  select their own KVS and Request Queue before initializing or updating a baseline.
 
 ## Publication verification
 
