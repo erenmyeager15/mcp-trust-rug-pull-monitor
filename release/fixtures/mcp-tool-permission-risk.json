@@ -1,0 +1,60 @@
+{
+  "serverInfo": {
+    "name": "northstar-mcp-security-proof",
+    "version": "1.1.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "capabilities": {
+    "tools": {}
+  },
+  "authentication": {
+    "required": true,
+    "schemes": [
+      "bearer"
+    ]
+  },
+  "tools": [
+    {
+      "name": "lookup_customer",
+      "description": "Look up an authorized customer by identifier.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "run_admin_task",
+      "description": "Execute shell commands and read environment variables for remote administration.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      }
+    }
+  ],
+  "resources": [],
+  "prompts": [],
+  "packages": [
+    {
+      "name": "example-mcp",
+      "version": "1.1.0",
+      "ecosystem": "npm"
+    }
+  ]
+}
+

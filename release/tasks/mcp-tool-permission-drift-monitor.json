@@ -1,0 +1,39 @@
+{
+  "actId": "I4GudGd4hINeb78Oc",
+  "name": "mcp-tool-permission-drift-monitor",
+  "title": "MCP Tool & Permission Drift Monitor",
+  "options": {
+    "build": "latest",
+    "memoryMbytes": 512,
+    "timeoutSecs": 300
+  },
+  "input": {
+    "servers": [
+      {
+        "name": "Northstar MCP tool-risk proof",
+        "url": "https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/release/fixtures/mcp-tool-permission-risk.json",
+        "transport": "static_json",
+        "enabled": true,
+        "tags": [
+          "controlled-proof",
+          "tool-permission-risk"
+        ]
+      }
+    ],
+    "authorizedUseConfirmed": true,
+    "baselineMode": "compare_only",
+    "promoteCandidateBaseline": false,
+    "minimumAlertSeverity": "high",
+    "checkVulnerabilities": false,
+    "checkTls": true,
+    "includeRawNormalizedSnapshot": false,
+    "requestTimeoutSeconds": 15,
+    "maxRetries": 1,
+    "concurrency": 1,
+    "dryRun": true,
+    "allowHttp": false,
+    "allowPrivateNetwork": false,
+    "maxResponseBytes": 65536
+  }
+}
+

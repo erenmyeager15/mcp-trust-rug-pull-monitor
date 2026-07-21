@@ -1,0 +1,39 @@
+{
+  "actId": "I4GudGd4hINeb78Oc",
+  "name": "mcp-server-trust-baseline-check",
+  "title": "MCP Server Trust Baseline Check",
+  "options": {
+    "build": "latest",
+    "memoryMbytes": 512,
+    "timeoutSecs": 300
+  },
+  "input": {
+    "servers": [
+      {
+        "name": "Northstar MCP stable trust proof",
+        "url": "https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/src/__fixtures__/mcp-manifest.json",
+        "transport": "static_json",
+        "enabled": true,
+        "tags": [
+          "controlled-proof",
+          "trusted-baseline"
+        ]
+      }
+    ],
+    "authorizedUseConfirmed": true,
+    "baselineMode": "compare_only",
+    "promoteCandidateBaseline": false,
+    "minimumAlertSeverity": "medium",
+    "checkVulnerabilities": false,
+    "checkTls": true,
+    "includeRawNormalizedSnapshot": false,
+    "requestTimeoutSeconds": 15,
+    "maxRetries": 1,
+    "concurrency": 1,
+    "dryRun": true,
+    "allowHttp": false,
+    "allowPrivateNetwork": false,
+    "maxResponseBytes": 65536
+  }
+}
+

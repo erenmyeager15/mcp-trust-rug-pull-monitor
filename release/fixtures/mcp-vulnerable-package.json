@@ -1,0 +1,45 @@
+{
+  "serverInfo": {
+    "name": "northstar-mcp-package-proof",
+    "version": "1.0.0"
+  },
+  "protocolVersion": "2024-11-05",
+  "capabilities": {
+    "tools": {}
+  },
+  "authentication": {
+    "required": true,
+    "schemes": [
+      "bearer"
+    ]
+  },
+  "tools": [
+    {
+      "name": "catalog_lookup",
+      "description": "Return a public catalog record by identifier.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "recordId"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "resources": [],
+  "prompts": [],
+  "packages": [
+    {
+      "name": "lodash",
+      "version": "4.17.20",
+      "ecosystem": "npm"
+    }
+  ]
+}
+
