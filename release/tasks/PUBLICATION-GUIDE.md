@@ -17,8 +17,9 @@ then publish each task manually from its **Publication** tab in Apify Console.
 - Slug: `mcp-tool-permission-drift-monitor`
 - SEO title: `Detect MCP Tool and Permission Drift`
 - SEO description: `Inspect authorized public MCP metadata for risky tool, schema, authentication, and permission changes without invoking any discovered tool.`
-- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineKeyValueStoreId`, `baselineRequestQueueId`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
+- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
 - Dataset view: `securityReview`
+- Verified proof run: `HdzVYlWPdhW3TCf5z` (`critical`, risk score 95, two controlled tool-description findings)
 
 ## 2. MCP Package Vulnerability & TLS Audit
 
@@ -27,14 +28,17 @@ then publish each task manually from its **Publication** tab in Apify Console.
 - SEO description: `Check authorized public MCP metadata for exposed package vulnerabilities and TLS problems, with evidence, severity, and recommended actions.`
 - Public input fields: `servers`, `authorizedUseConfirmed`, `checkVulnerabilities`, `checkTls`, `minimumAlertSeverity`
 - Dataset view: `securityReview`
+- Verified proof run: `zCs82wX9dYZTlifhF` (`critical`, risk score 100, five controlled OSV matches)
 
 ## 3. MCP Server Trust Baseline Check
 
 - Slug: `mcp-server-trust-baseline-check`
 - SEO title: `Check an MCP Server Against a Trusted Baseline`
 - SEO description: `Compare authorized public MCP metadata with a trusted baseline and surface security-relevant drift, risk scores, and review actions.`
-- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
+- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineKeyValueStoreId`, `baselineRequestQueueId`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
 - Dataset view: `overview`
+- Persistent proof KVS: `mcp-trust-baseline-proof-state`
+- Persistent proof Request Queue: `mcp-trust-baseline-proof-locks`
 
 ## Publication verification
 

@@ -21,3 +21,11 @@ The public presets are deliberately conservative:
 
 See `tasks/PUBLICATION-GUIDE.md` for the exact Store fields, views, and SEO copy.
 
+## Verified proof assets
+
+- `sample-output/mcp-tool-permission-drift-sample.json` summarizes cloud run
+  `HdzVYlWPdhW3TCf5z`.
+- `sample-output/mcp-package-vulnerability-tls-sample.json` summarizes cloud run
+  `zCs82wX9dYZTlifhF`.
+- `promotion/mcp-trust-proof.png` is the checked 1200x630 launch image.
+- `promotion/PROMOTION-COPY.md` contains channel-specific launch copy.

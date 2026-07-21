@@ -1,0 +1,24 @@
+{
+  "proofRunId": "HdzVYlWPdhW3TCf5z",
+  "serverName": "Northstar MCP tool-risk proof",
+  "status": "baseline_missing",
+  "reachable": true,
+  "transport": "static_json",
+  "overallSeverity": "critical",
+  "riskScore": 95,
+  "changeCount": 2,
+  "signals": [
+    {
+      "ruleId": "DESC_COMMAND_EXECUTION",
+      "severity": "critical",
+      "finding": "Tool description claims shell-command execution."
+    },
+    {
+      "ruleId": "DESC_ENVIRONMENT_ACCESS",
+      "severity": "critical",
+      "finding": "Tool description claims environment-variable access."
+    }
+  ],
+  "tlsAuthorized": true,
+  "recommendedAction": "Initialize a trusted baseline only after human review."
+}

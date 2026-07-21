@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MCP Trust and Rug-Pull Monitor proof</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f3f6f8;
+      color: #151b22;
+      letter-spacing: 0;
+    }
+    main {
+      width: 1200px;
+      height: 630px;
+      padding: 42px 54px 34px;
+      border-top: 10px solid #157a6e;
+    }
+    header { display: flex; justify-content: space-between; align-items: flex-start; gap: 34px; }
+    .eyebrow { margin: 0 0 10px; color: #12685f; font-size: 18px; font-weight: 800; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 780px; font-size: 42px; line-height: 1.08; }
+    .verified {
+      flex: 0 0 auto;
+      border: 2px solid #157a6e;
+      background: #e3f4f0;
+      padding: 11px 15px;
+      color: #105e56;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .summary {
+      margin: 25px 0 15px;
+      display: grid;
+      grid-template-columns: 1.35fr 1fr 1fr;
+      gap: 12px;
+    }
+    .metric { min-height: 88px; padding: 16px 19px; background: #fff; border: 1px solid #cbd5dc; }
+    .metric strong { display: block; margin-bottom: 8px; font-size: 29px; line-height: 1; }
+    .metric span { color: #53616b; font-size: 16px; }
+    .critical strong { color: #b42318; }
+    .proofs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .proof { min-height: 192px; padding: 18px 20px; background: #fff; border-left: 6px solid #157a6e; }
+    .proof.risk { border-left-color: #b42318; }
+    .proof h2 { margin: 0 0 7px; font-size: 22px; }
+    .run { color: #667681; font-size: 14px; font-weight: 700; }
+    ul { margin: 14px 0 0; padding-left: 20px; }
+    li { margin: 8px 0; font-size: 17px; line-height: 1.25; }
+    footer { display: flex; justify-content: space-between; margin-top: 17px; color: #596974; font-size: 15px; }
+    footer strong { color: #151b22; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">Verified Apify cloud evidence</p>
+        <h1>MCP Trust &amp; Rug-Pull Monitor</h1>
+      </div>
+      <div class="verified">METADATA ONLY / NO TOOL EXECUTION</div>
+    </header>
+
+    <section class="summary" aria-label="Proof summary">
+      <div class="metric"><strong>2 controlled checks</strong><span>Public fixtures, bounded inspection</span></div>
+      <div class="metric critical"><strong>95 / 100</strong><span>Tool-risk scores</span></div>
+      <div class="metric critical"><strong>5 advisories</strong><span>Live OSV package matches</span></div>
+    </section>
+
+    <section class="proofs" aria-label="Detected security signals">
+      <article class="proof risk">
+        <h2>Tool &amp; permission review</h2>
+        <div class="run">Run HdzVYlWPdhW3TCf5z</div>
+        <ul>
+          <li>Critical shell-command claim detected</li>
+          <li>Critical environment-access claim detected</li>
+          <li>TLS endpoint authorized and inspected</li>
+        </ul>
+      </article>
+      <article class="proof">
+        <h2>Package &amp; TLS review</h2>
+        <div class="run">Run zCs82wX9dYZTlifhF</div>
+        <ul>
+          <li>5 OSV matches for controlled lodash fixture</li>
+          <li>2 high and 3 medium advisories</li>
+          <li>Evidence, severity and action included</li>
+        </ul>
+      </article>
+    </section>
+
+    <footer>
+      <span><strong>fascinating_lentil/mcp-trust-rug-pull-monitor</strong></span>
+      <span>Authorization gated / Private networks blocked</span>
+    </footer>
+  </main>
+</body>
+</html>
