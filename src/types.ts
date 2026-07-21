@@ -21,6 +21,8 @@ export interface ServerInput {
 export interface ActorInput {
     servers: ServerInput[];
     authorizedUseConfirmed: boolean;
+    baselineKeyValueStoreId?: string;
+    baselineRequestQueueId?: string;
     baselineMode: BaselineMode;
     minimumAlertSeverity: Severity;
     webhookUrl?: string;

@@ -21,6 +21,8 @@
       }
     ],
     "authorizedUseConfirmed": true,
+    "baselineKeyValueStoreId": "7UMk3f0aCEOh3Acqe",
+    "baselineRequestQueueId": "VtQO59bzhwG1tbEjL",
     "baselineMode": "compare_only",
     "promoteCandidateBaseline": false,
     "minimumAlertSeverity": "medium",
@@ -36,4 +38,3 @@
     "maxResponseBytes": 65536
   }
 }
-

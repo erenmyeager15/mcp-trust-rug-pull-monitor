@@ -12,6 +12,11 @@ interface LockUserData { owner?: unknown; expiresAt?: unknown; baselineIdentity?
 export class ApifyBaselineStore implements BaselineStore {
     private readonly heldLocks = new Map<string, LockHandle>();
 
+    constructor(
+        private readonly keyValueStoreId?: string,
+        private readonly requestQueueId?: string,
+    ) {}
+
     async get(key: string): Promise<StoredBaseline | undefined> {
         const store = this.cloudStore();
         if (!store) return (await Actor.getValue<StoredBaseline>(key)) ?? undefined;
@@ -25,7 +30,7 @@ export class ApifyBaselineStore implements BaselineStore {
 
     async acquireLock(key: string, proposed: BaselineLease): Promise<BaselineLease | undefined> {
         const api = Actor.newClient({ maxRetries: 0, timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS });
-        const queueId = Actor.getEnv().defaultRequestQueueId;
+        const queueId = this.requestQueueId ?? Actor.getEnv().defaultRequestQueueId;
         if (!queueId) throw new Error('Atomic baseline mutation requires an Apify Cloud Key-Value Store and Request Queue.');
         const client = api.requestQueue(queueId, { clientKey: proposed.owner, timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS });
         const uniqueKey = key;
@@ -79,7 +84,7 @@ export class ApifyBaselineStore implements BaselineStore {
     }
 
     private cloudStore(): KeyValueStoreClient | undefined {
-        const id = Actor.getEnv().defaultKeyValueStoreId;
+        const id = this.keyValueStoreId ?? Actor.getEnv().defaultKeyValueStoreId;
         return id ? Actor.newClient({ maxRetries: 0, timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS }).keyValueStore(id) : undefined;
     }
     private requiredCloudStore(): KeyValueStoreClient {

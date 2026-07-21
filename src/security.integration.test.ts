@@ -23,6 +23,8 @@ function response(status: number): SafeHttpResponse { return { status, headers: 
 test('authorization confirmation, URL validation, and SSRF blocks are enforced', () => {
     assert.throws(() => validateInput({ servers: [{ name: 'x', url: 'https://mcp.example.com' }] }), /Authorization required/);
     assert.throws(() => validateInput({ authorizedUseConfirmed: true, servers: [{ name: 'x', url: 'http://mcp.example.com' }] }), /HTTP/);
+    assert.throws(() => validateInput({ authorizedUseConfirmed: true, baselineMode: 'initialize_only', servers: [{ name: 'x', url: 'https://mcp.example.com' }] }), /persistent baseline/);
+    assert.throws(() => validateInput({ authorizedUseConfirmed: true, dryRun: true, baselineKeyValueStoreId: 'only-one-store', servers: [{ name: 'x', url: 'https://mcp.example.com' }] }), /provided together/);
     for (const target of ['http://127.0.0.1', 'https://localhost', 'https://169.254.169.254', 'https://[::ffff:127.0.0.1]', 'https://[::ffff:7f00:1]', 'file:///etc/passwd', 'https://metadata.google.internal']) assert.throws(() => assertPublicUrl(target, true));
     assert.doesNotThrow(() => assertPublicUrl('https://mcp.example.com/mcp', false));
     assert.equal(isBlockedIp('10.0.0.1'), true); assert.equal(isBlockedIp('192.168.1.1'), true); assert.equal(isBlockedIp('8.8.8.8'), false);

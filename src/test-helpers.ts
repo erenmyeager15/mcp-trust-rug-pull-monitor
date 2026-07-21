@@ -5,7 +5,7 @@ import type { VulnerabilityProvider } from './vulnerability.js';
 
 export const TEST_URL = 'https://mcp.example.com/mcp';
 export function input(overrides: Partial<ActorInput> = {}): ActorInput {
-    const result = validateInput({ authorizedUseConfirmed: true, servers: [{ name: 'fixture-mcp', url: TEST_URL, transport: 'static_json', enabled: true }], baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, ...overrides });
+    const result = validateInput({ authorizedUseConfirmed: true, servers: [{ name: 'fixture-mcp', url: TEST_URL, transport: 'static_json', enabled: true }], baselineKeyValueStoreId: 'fixture-kvs', baselineRequestQueueId: 'fixture-rq', baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, ...overrides });
     return result;
 }
 export function server(): ServerInput { return input().servers[0] as ServerInput; }

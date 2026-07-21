@@ -93,6 +93,22 @@
       "default": false,
       "prefill": true
     },
+    "baselineKeyValueStoreId": {
+      "title": "Persistent baseline key-value store",
+      "type": "string",
+      "description": "Optional persistent Key-Value Store for trusted and candidate baselines. Required together with a baseline Request Queue for non-dry-run initialization, update, or promotion. Reuse the same selected stores across scheduled runs.",
+      "editor": "resourcePicker",
+      "resourceType": "keyValueStore",
+      "resourcePermissions": ["READ", "WRITE"]
+    },
+    "baselineRequestQueueId": {
+      "title": "Persistent baseline lock queue",
+      "type": "string",
+      "description": "Optional persistent Request Queue used only for atomic baseline mutation locks. Required together with the baseline Key-Value Store for non-dry-run initialization, update, or promotion.",
+      "editor": "resourcePicker",
+      "resourceType": "requestQueue",
+      "resourcePermissions": ["READ", "WRITE"]
+    },
     "baselineMode": {
       "title": "Baseline mode",
       "type": "string",

@@ -61,6 +61,7 @@ Input limits match runtime validation:
 - `manual_approval`: write a separate candidate and never overwrite trusted state.
 - `promoteCandidateBaseline: true`: promote only a compatible stored candidate whose endpoint identity, current snapshot hash, and recorded trusted-parent hash (or explicit no-parent state) exactly match current state. Any missing, incompatible, endpoint/hash/parent mismatch returns structured `promotion_mismatch`, preserves both records, and never substitutes a new candidate. A valid attempt durably marks its exact target before updating trusted state, so retry can safely finish candidate consumption if deletion was interrupted after the trusted write. Successful promotion consumes the candidate.
 - `dryRun: true`: disable all trusted, candidate, and promotion writes regardless of mode.
+- `baselineKeyValueStoreId` + `baselineRequestQueueId`: optional persistent stores selected through Apify resource pickers. Both are required for any non-dry-run initialization, update, candidate write, or promotion. Reuse the same two stores across task or scheduled runs.
 
 Unreachable, malformed, timed-out, unauthenticated, empty, incomplete, incompatible, unclassified, or lease-conflicted inspections never replace trusted state.
 

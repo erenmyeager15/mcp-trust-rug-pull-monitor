@@ -66,7 +66,7 @@ test('failure states are structured and one failing server does not stop another
         const report = await monitorServer(server(), input(), { baselines: new MemoryBaselineStore(), inspector: async () => failure(status) });
         assert.equal(report.status, status); assert.equal(report.baselineUpdated, false);
     }
-    const multi = validateInput({ authorizedUseConfirmed: true, baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, servers: [{ name: 'good', url: 'https://good.example.com/mcp' }, { name: 'bad', url: 'https://bad.example.com/mcp' }] });
+    const multi = validateInput({ authorizedUseConfirmed: true, baselineKeyValueStoreId: 'fixture-kvs', baselineRequestQueueId: 'fixture-rq', baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, servers: [{ name: 'good', url: 'https://good.example.com/mcp' }, { name: 'bad', url: 'https://bad.example.com/mcp' }] });
     const reports = await monitorServers(multi, { baselines: new MemoryBaselineStore(), inspector: async (target) => target.name === 'bad' ? failure('unreachable') : success(snapshot()) });
     assert.equal(reports.length, 2); assert.equal(reports[0]?.status, 'baseline_initialized'); assert.equal(reports[1]?.status, 'unreachable');
 });
@@ -112,7 +112,7 @@ test('unclassified hash drift is never promoted', async () => {
 });
 
 test('thrown per-target failures are isolated as internal-error reports', async () => {
-    const multi = validateInput({ authorizedUseConfirmed: true, baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, servers: [{ name: 'good', url: 'https://good.example.com/mcp' }, { name: 'bad', url: 'https://bad.example.com/mcp' }] });
+    const multi = validateInput({ authorizedUseConfirmed: true, baselineKeyValueStoreId: 'fixture-kvs', baselineRequestQueueId: 'fixture-rq', baselineMode: 'compare_and_update', checkTls: false, checkVulnerabilities: false, servers: [{ name: 'good', url: 'https://good.example.com/mcp' }, { name: 'bad', url: 'https://bad.example.com/mcp' }] });
     const reports = await monitorServers(multi, { baselines: new MemoryBaselineStore(), inspector: async (target) => { if (target.name === 'bad') throw new Error('Bearer should-not-leak'); return success(snapshot()); } });
     assert.equal(reports[0]?.status, 'baseline_initialized');
     assert.equal(reports[1]?.status, 'internal_error');

@@ -21,7 +21,7 @@ try {
     const env = Actor.getEnv();
     const runUrl = env.actorRunId ? `https://console.apify.com/view/runs/${env.actorRunId}` : undefined;
     await monitorServers(input, {
-        baselines: new ApifyBaselineStore(),
+        baselines: new ApifyBaselineStore(input.baselineKeyValueStoreId, input.baselineRequestQueueId),
         vulnerabilityProvider: new OsvProvider(),
         ppe: new IdempotentPpeAccountant(new ApifyChargeClient()),
         shouldStop: () => stopping,

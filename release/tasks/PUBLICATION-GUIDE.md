@@ -17,7 +17,7 @@ then publish each task manually from its **Publication** tab in Apify Console.
 - Slug: `mcp-tool-permission-drift-monitor`
 - SEO title: `Detect MCP Tool and Permission Drift`
 - SEO description: `Inspect authorized public MCP metadata for risky tool, schema, authentication, and permission changes without invoking any discovered tool.`
-- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
+- Public input fields: `servers`, `authorizedUseConfirmed`, `baselineKeyValueStoreId`, `baselineRequestQueueId`, `baselineMode`, `checkTls`, `minimumAlertSeverity`
 - Dataset view: `securityReview`
 
 ## 2. MCP Package Vulnerability & TLS Audit
@@ -45,4 +45,3 @@ After publishing, confirm that each task:
 3. exposes only the listed input fields;
 4. uses the intended Dataset view;
 5. retains `compare_only`, `dryRun`, no webhook, and blocked private-network defaults.
-

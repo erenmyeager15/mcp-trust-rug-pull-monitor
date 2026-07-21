@@ -49,10 +49,24 @@ export function validateInput(raw: unknown, runtimeBaselineDefault: BaselineMode
         if (baselineKeys.has(key)) fail(`servers contains duplicate effective target ${redactMetadataText(server.name, 128)} at ${redactUrl(server.url)}`);
         baselineKeys.add(key);
     }
+    const baselineMode = enumValue(root.baselineMode, runtimeBaselineDefault, modes, 'baselineMode');
+    const dryRun = bool(root.dryRun, false, 'dryRun');
+    const promoteCandidateBaseline = bool(root.promoteCandidateBaseline, false, 'promoteCandidateBaseline');
+    const baselineKeyValueStoreId = root.baselineKeyValueStoreId === undefined || root.baselineKeyValueStoreId === ''
+        ? undefined : string(root.baselineKeyValueStoreId, 'baselineKeyValueStoreId', 128);
+    const baselineRequestQueueId = root.baselineRequestQueueId === undefined || root.baselineRequestQueueId === ''
+        ? undefined : string(root.baselineRequestQueueId, 'baselineRequestQueueId', 128);
+    if (Boolean(baselineKeyValueStoreId) !== Boolean(baselineRequestQueueId)) fail('baselineKeyValueStoreId and baselineRequestQueueId must be provided together');
+    const mutationRequested = !dryRun && (baselineMode !== 'compare_only' || promoteCandidateBaseline);
+    if (mutationRequested && (!baselineKeyValueStoreId || !baselineRequestQueueId)) {
+        fail('persistent baseline Key-Value Store and Request Queue selections are required for non-dry-run baseline mutation');
+    }
     return {
         servers,
         authorizedUseConfirmed: true,
-        baselineMode: enumValue(root.baselineMode, runtimeBaselineDefault, modes, 'baselineMode'),
+        ...(baselineKeyValueStoreId ? { baselineKeyValueStoreId } : {}),
+        ...(baselineRequestQueueId ? { baselineRequestQueueId } : {}),
+        baselineMode,
         minimumAlertSeverity: enumValue(root.minimumAlertSeverity, 'medium', severities, 'minimumAlertSeverity'),
         webhookUrl: root.webhookUrl === undefined || root.webhookUrl === '' ? undefined : validateWebhook(root.webhookUrl),
         checkVulnerabilities: bool(root.checkVulnerabilities, true, 'checkVulnerabilities'),
@@ -61,8 +75,8 @@ export function validateInput(raw: unknown, runtimeBaselineDefault: BaselineMode
         requestTimeoutSeconds: integer(root.requestTimeoutSeconds, 20, 'requestTimeoutSeconds', 1, 120),
         maxRetries: integer(root.maxRetries, 2, 'maxRetries', 0, 4),
         concurrency: integer(root.concurrency, 5, 'concurrency', 1, 10),
-        dryRun: bool(root.dryRun, false, 'dryRun'),
-        promoteCandidateBaseline: bool(root.promoteCandidateBaseline, false, 'promoteCandidateBaseline'),
+        dryRun,
+        promoteCandidateBaseline,
         allowHttp,
         allowPrivateNetwork: false,
         maxResponseBytes: integer(root.maxResponseBytes, DEFAULT_MAX_RESPONSE_BYTES, 'maxResponseBytes', 16_384, 5_242_880),
@@ -128,5 +142,6 @@ export function safeInputSummary(input: ActorInput): JsonObject {
             tags: server.tags?.map((tag) => redactMetadataText(tag, 128)),
         })),
         baselineMode: input.baselineMode,
+        persistentBaselineStorageConfigured: Boolean(input.baselineKeyValueStoreId && input.baselineRequestQueueId),
     };
 }
