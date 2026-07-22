@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { requestQueueClientKey } from './apify-store.js';
 import { createBaseline, trustedBaselineKey, usableBaseline } from './baseline.js';
 import { createChange } from './diff.js';
 import { validateInput } from './input.js';
@@ -19,6 +20,12 @@ function report(): Report {
     return { serverName: 'fixture-mcp', serverUrl: 'https://mcp.example.com/mcp?token=abc', status: 'success_changed', reachable: true, transport: 'static_json', baselineFound: true, previousSnapshotHash: 'sha256:old', currentSnapshotHash: 'sha256:new', overallSeverity: 'high', riskScore: 70, changeCount: 1, changesBySeverity: { informational: 0, low: 0, medium: 0, high: 1, critical: 0 }, changes: [], vulnerabilities: [], recommendedAction: 'Review.', baselineUpdated: false, candidateBaselineStored: false, inspectedAt: '2026-01-01T00:00:00.000Z', checkedAt: '2026-01-01T00:00:00.000Z' };
 }
 function response(status: number): SafeHttpResponse { return { status, headers: new Headers({ 'content-type': 'application/json' }), body: '{}', url: 'https://alerts.example.com', redirectOrigins: [], latencyMs: 1 }; }
+
+test('request queue lock client keys satisfy the Apify 32-character limit', () => {
+    const key = requestQueueClientKey('cb7cb8b6-baa1-45c0-b8a0-28e69c61cc7b');
+    assert.equal(key.length, 32);
+    assert.match(key, /^[a-f0-9]{32}$/);
+});
 
 test('authorization confirmation, URL validation, and SSRF blocks are enforced', () => {
     assert.throws(() => validateInput({ servers: [{ name: 'x', url: 'https://mcp.example.com' }] }), /Authorization required/);

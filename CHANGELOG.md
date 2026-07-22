@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.9 - 2026-07-22
+- Fixed persistent baseline lock acquisition by constraining Request Queue client keys to Apify's 32-character API limit.
+- Made native Request Queue lock prolongation the authoritative ownership check, avoiding brittle duplicate-owner checks while preserving fail-closed writes.
+- Added a regression test for the generated lock client key.
+
 ## 1.0.5 - 2026-07-21
 - Added explicit KVS and Request Queue resource pickers so recurring baseline comparisons can safely reuse user-selected storage under limited permissions.
 - Required both persistent stores for any non-dry-run baseline mutation.

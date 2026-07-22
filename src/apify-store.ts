@@ -1,5 +1,5 @@
 import { Actor } from 'apify';
-import type { KeyValueStoreClient, RequestQueueClient, RequestQueueClientRequestSchema } from 'apify-client';
+import type { KeyValueStoreClient, RequestQueueClient } from 'apify-client';
 import { MAX_SERVER_WALL_CLOCK_MS } from './constants.js';
 import { sha256 } from './json.js';
 import type { BaselineLease, BaselineStore, ChargeClient, StoredBaseline } from './types.js';
@@ -7,7 +7,10 @@ import type { BaselineLease, BaselineStore, ChargeClient, StoredBaseline } from 
 const LOCK_TTL_SECONDS = Math.ceil((MAX_SERVER_WALL_CLOCK_MS + 300_000) / 1_000);
 const STORAGE_CLIENT_TIMEOUT_SECONDS = 30;
 interface LockHandle { client: RequestQueueClient; requestId: string; uniqueKey: string; url: string; lease: BaselineLease; }
-interface LockUserData { owner?: unknown; expiresAt?: unknown; baselineIdentity?: unknown; }
+
+export function requestQueueClientKey(owner: string): string {
+    return sha256(owner).slice(7, 39);
+}
 
 export class ApifyBaselineStore implements BaselineStore {
     private readonly heldLocks = new Map<string, LockHandle>();
@@ -32,7 +35,10 @@ export class ApifyBaselineStore implements BaselineStore {
         const api = Actor.newClient({ maxRetries: 0, timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS });
         const queueId = this.requestQueueId ?? Actor.getEnv().defaultRequestQueueId;
         if (!queueId) throw new Error('Atomic baseline mutation requires an Apify Cloud Key-Value Store and Request Queue.');
-        const client = api.requestQueue(queueId, { clientKey: proposed.owner, timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS });
+        const client = api.requestQueue(queueId, {
+            clientKey: requestQueueClientKey(proposed.owner),
+            timeoutSecs: STORAGE_CLIENT_TIMEOUT_SECONDS,
+        });
         const uniqueKey = key;
         const url = `https://mcp-baseline-lock.invalid/${sha256(key).slice(7)}`;
         const lease: BaselineLease = { owner: proposed.owner, expiresAt: new Date(Date.now() + LOCK_TTL_SECONDS * 1_000).toISOString() };
@@ -42,12 +48,8 @@ export class ApifyBaselineStore implements BaselineStore {
             const locked = await client.listAndLockHead({ limit: 1, lockSecs: LOCK_TTL_SECONDS });
             if (!locked.items.some((item) => item.id === added.requestId)) return undefined;
             nativeLockAcquired = true;
-            await client.prolongRequestLock(added.requestId, { lockSecs: LOCK_TTL_SECONDS });
-            const current = await client.getRequest(added.requestId) as (RequestQueueClientRequestSchema & { userData?: LockUserData }) | undefined;
-            if (!hasOwner(current?.userData, lease)) {
-                await client.deleteRequestLock(added.requestId);
-                return undefined;
-            }
+            const prolonged = await client.prolongRequestLock(added.requestId, { lockSecs: LOCK_TTL_SECONDS });
+            lease.expiresAt = prolonged.lockExpiresAt.toISOString();
             this.heldLocks.set(key, { client, requestId: added.requestId, uniqueKey, url, lease });
             return lease;
         } catch (error) {
@@ -63,8 +65,6 @@ export class ApifyBaselineStore implements BaselineStore {
         if (!handle || handle.lease.owner !== lease.owner || Date.parse(handle.lease.expiresAt) <= Date.now()) return false;
         try {
             const prolonged = await handle.client.prolongRequestLock(handle.requestId, { lockSecs: LOCK_TTL_SECONDS });
-            const current = await handle.client.getRequest(handle.requestId) as (RequestQueueClientRequestSchema & { userData?: LockUserData }) | undefined;
-            if (current?.userData?.owner !== lease.owner) return false;
             const refreshed = { ...lease, expiresAt: prolonged.lockExpiresAt.toISOString() };
             handle.lease = refreshed;
             return true;
@@ -74,11 +74,14 @@ export class ApifyBaselineStore implements BaselineStore {
     async releaseLock(key: string, lease: BaselineLease): Promise<void> {
         const handle = this.heldLocks.get(key);
         if (!handle || handle.lease.owner !== lease.owner) return;
+        let ownershipConfirmed = false;
         try {
-            const current = await handle.client.getRequest(handle.requestId) as (RequestQueueClientRequestSchema & { userData?: LockUserData }) | undefined;
-            if (current?.userData?.owner === lease.owner) {
-                try { await handle.client.deleteRequest(handle.requestId); }
-                catch { await handle.client.deleteRequestLock(handle.requestId); }
+            await handle.client.prolongRequestLock(handle.requestId, { lockSecs: LOCK_TTL_SECONDS });
+            ownershipConfirmed = true;
+            await handle.client.deleteRequest(handle.requestId);
+        } catch {
+            if (ownershipConfirmed) {
+                try { await handle.client.deleteRequestLock(handle.requestId); } catch { /* Native expiry safely releases the lock. */ }
             }
         } finally { this.heldLocks.delete(key); }
     }
@@ -92,12 +95,6 @@ export class ApifyBaselineStore implements BaselineStore {
         if (!store) throw new Error('Atomic baseline mutation requires an Apify Cloud Key-Value Store and Request Queue.');
         return store;
     }
-}
-
-function hasOwner(userData: LockUserData | undefined, lease: BaselineLease): boolean {
-    return userData?.owner === lease.owner
-        && typeof userData.expiresAt === 'string'
-        && Date.parse(userData.expiresAt) > Date.now();
 }
 
 export class ApifyChargeClient implements ChargeClient {
