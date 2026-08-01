@@ -1,6 +1,25 @@
 # MCP Trust & Rug-Pull Monitor
 
-A defensive Apify Actor that monitors **authorized** MCP server metadata for security-relevant drift. It retrieves only exposed discovery metadata, normalizes and redacts it, compares it with a trusted baseline when one exists, and produces structured reports for human review. It never invokes discovered tools (`tools/call`), executes local processes, uses stdio/process transport, guesses credentials, bypasses authentication, or sends destructive target requests.
+Detect security-relevant changes in **authorized** MCP servers before accepting a new configuration as trusted. The Actor compares exposed discovery metadata with a trusted baseline and returns severity, a deterministic risk score, evidence, and a recommended action.
+
+Use it to answer practical review questions:
+
+- Did a server add tools or expand an existing tool's schema?
+- Did tool descriptions, resources, prompts, or exposed capabilities change?
+- Did an explicitly declared package version gain a known OSV advisory?
+- Did the endpoint's TLS certificate or transport metadata change?
+- Is the new state safe to review, or should it remain quarantined as a candidate?
+
+Risky changes are never trusted automatically. The Actor retrieves only bounded discovery metadata, never invokes discovered tools (`tools/call`), and never executes local processes.
+
+## Try a safe example
+
+These public examples use controlled, non-secret fixtures and safe dry-run settings:
+
+- [Monitor MCP tool and permission drift](https://apify.com/fascinating_lentil/mcp-trust-rug-pull-monitor/examples/mcp-tool-permission-drift-monitor)
+- [Audit MCP package vulnerabilities and TLS](https://apify.com/fascinating_lentil/mcp-trust-rug-pull-monitor/examples/mcp-package-vulnerability-tls-audit)
+
+Each enabled server produces one structured Dataset report. Current Store pricing starts at **$0.001 per completed server inspection**, plus **$0.0005 per generated risk report** and a **$0.00005 Actor start**. Baseline comparisons and completed OSV lookups are optional billed events at **$0.0005** and **$0.001** respectively. Failed or unpersisted inspections are not charged as completed reports.
 
 > **Authorization and legal notice:** Set `authorizedUseConfirmed: true` only when every target intentionally exposes public metadata, belongs to you, or you have explicit permission to inspect it. You are responsible for applicable terms, law, and organizational policy. This Actor does not certify safety or detect every attack.
 
