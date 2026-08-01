@@ -102,26 +102,29 @@ When metadata explicitly contains an unambiguous package name, version, and ecos
 
 Changes include a stable ID, category, entity, JSON path where applicable, redacted values, deterministic severity and score contribution, rule ID, explanation, evidence, confidence, and recommended action. The rule-based score is not an LLM judgment. This remains a change monitor with possible false positives and false negatives; review medium, high, and critical results before action.
 
-## Cloud smoke input
+## Verified Sample Output
 
-[`input-smoke.json`](input-smoke.json) is a no-secret cloud smoke configuration for the public raw GitHub fixture URL `https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/src/__fixtures__/mcp-manifest.json`. The same safe fixture is used by the input-schema prefill for automated Store QA. It uses explicit `static_json`, `compare_only`, `dryRun`, no TLS/OSV/webhook, zero retries, one worker, a three-second request bound, and the minimum response limit. The fixture contains meaningful MCP server/tool/package metadata and no credentials or secret values. A successful inspection is expected to return non-green `baseline_missing` with `baselineUpdated: false` and `candidateBaselineStored: false`; it performs no KVS or Request Queue writes.
+The following compact report came from the controlled Northstar MCP package-risk proof. Values such as package, severity, risk score, and vulnerability counts are stored in the full Dataset report.
 
-The local `npm run smoke` command is separate: it uses in-memory fixtures to exercise initialization, unchanged comparison, and a security-relevant change without network access.
-
-## Development and release validation
-
-Node.js 20 or newer is required. The scripts invoke TypeScript through Node directly, so this Windows path's `&` character is not interpreted through a `node_modules/.bin` shim.
-
-```powershell
-npm ci
-npm run typecheck
-npm run lint
-npm run test:unit
-npm run test:integration
-npm test
-npm run smoke
-npm audit --omit=dev --audit-level=high
-npx --yes apify-cli@1.7.1 validate-schema
+```json
+{
+  "serverName": "Northstar MCP package-risk proof",
+  "status": "baseline_missing",
+  "reachable": true,
+  "transport": "static_json",
+  "overallSeverity": "critical",
+  "riskScore": 100,
+  "package": "lodash@4.17.20",
+  "vulnerabilityCount": 5,
+  "vulnerabilitiesBySeverity": {
+    "high": 2,
+    "medium": 3
+  },
+  "tlsAuthorized": true,
+  "recommendedAction": "Review the OSV advisories and update, mitigate, or remove the affected package."
+}
 ```
 
-The project is licensed under Apache-2.0; see [LICENSE](LICENSE). It uses no paid AI API and has no dashboard or separate SaaS component.
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
