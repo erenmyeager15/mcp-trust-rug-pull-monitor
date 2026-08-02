@@ -1,6 +1,8 @@
-# MCP Trust & Rug-Pull Monitor
+# MCP Server Security & Trust Monitor
 
 Detect security-relevant changes in **authorized** MCP servers before accepting a new configuration as trusted. The Actor compares exposed discovery metadata with a trusted baseline and returns severity, a deterministic risk score, evidence, and a recommended action.
+
+The public Actor runs with **Apify Limited Permissions**. It reads bounded discovery metadata only: it never invokes discovered tools, executes local processes, or accesses localhost or private-network targets. HTTPS is required by default, and DNS plus redirects are revalidated before access.
 
 Use it to answer practical review questions:
 
@@ -10,12 +12,13 @@ Use it to answer practical review questions:
 - Did the endpoint's TLS certificate or transport metadata change?
 - Is the new state safe to review, or should it remain quarantined as a candidate?
 
-Risky changes are never trusted automatically. The Actor retrieves only bounded discovery metadata, never invokes discovered tools (`tools/call`), and never executes local processes.
+Risky changes are never trusted automatically. New states remain reviewable candidates until explicitly promoted.
 
 ## Try a safe example
 
 These public examples use controlled, non-secret fixtures and safe dry-run settings:
 
+- [Establish an MCP server trust baseline](https://apify.com/fascinating_lentil/mcp-trust-rug-pull-monitor/examples/mcp-server-trust-baseline-check)
 - [Monitor MCP tool and permission drift](https://apify.com/fascinating_lentil/mcp-trust-rug-pull-monitor/examples/mcp-tool-permission-drift-monitor)
 - [Audit MCP package vulnerabilities and TLS](https://apify.com/fascinating_lentil/mcp-trust-rug-pull-monitor/examples/mcp-package-vulnerability-tls-audit)
 

@@ -1,7 +1,7 @@
 {
   "actorSpecification": 1,
   "name": "mcp-trust-rug-pull-monitor",
-  "title": "MCP Trust & Rug-Pull Monitor",
+  "title": "MCP Server Security & Trust Monitor",
   "description": "Monitor authorized public MCP servers for tool, schema, permission, package, TLS, and behavioral drift. Detect suspicious changes, preserve trusted baselines, and quarantine risky updates for manual approval.",
   "version": "1.0",
   "dockerfile": "Dockerfile",
