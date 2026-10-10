@@ -1,7 +1,7 @@
 {
   "actorOutputSchemaVersion": 1,
-  "title": "MCP trust monitoring output",
-  "description": "Per-server trust reports plus the trusted and candidate baseline records that mutating modes persist in the default Key-Value Store.",
+  "title": "MCP security monitoring and trust-gate output",
+  "description": "Per-server security evidence, an ALLOW/REVIEW/BLOCK executive decision, downloadable reports, and trusted or candidate baseline records.",
   "type": "object",
   "properties": {
     "reports": {
@@ -9,6 +9,24 @@
       "title": "Server trust reports",
       "description": "One structured, redacted monitoring report per enabled server in the default Dataset.",
       "template": "{{links.apiDefaultDatasetUrl}}/items"
+    },
+    "executiveSummary": {
+      "type": "string",
+      "title": "Executive trust-gate summary",
+      "description": "Machine-readable run totals, maximum risk, and the overall ALLOW, REVIEW, or BLOCK decision.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/OUTPUT"
+    },
+    "markdownReport": {
+      "type": "string",
+      "title": "Markdown security report",
+      "description": "Human-readable decisions and prioritized findings for tickets, reviews, and AI workflows.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/report.md"
+    },
+    "csvReport": {
+      "type": "string",
+      "title": "CSV evidence report",
+      "description": "Formula-safe spreadsheet export of server decisions and classified findings.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/report.csv"
     },
     "trustedBaselines": {
       "type": "string",

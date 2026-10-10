@@ -1,8 +1,25 @@
-# MCP Server Security & Trust Monitor
+# MCP Security Monitor — Tool Drift & Trust Gates
 
-Detect security-relevant changes in **authorized** MCP servers before accepting a new configuration as trusted. The Actor compares exposed discovery metadata with a trusted baseline and returns severity, a deterministic risk score, evidence, and a recommended action.
+Continuously monitor **authorized** MCP servers before your agents trust a changed tool surface. The Actor compares exposed discovery metadata with a trusted baseline, detects security-relevant drift, and produces a deterministic **ALLOW**, **REVIEW**, or **BLOCK** decision with evidence.
 
 The public Actor runs with **Apify Limited Permissions**. It reads bounded discovery metadata only: it never invokes discovered tools, executes local processes, or accesses localhost or private-network targets. HTTPS is required by default, and DNS plus redirects are revalidated before access.
+
+## Why security and AI teams choose it
+
+- **Trust gates, not raw diffs:** turn tool, schema, permission, capability, package, TLS, and suspicious description changes into an automation-ready decision.
+- **Safe approval workflow:** keep risky new states as candidates and promote only an exact snapshot with the expected trusted parent.
+- **Evidence for every decision:** export structured Dataset rows, a machine-readable executive summary, Markdown review report, and formula-safe CSV queue.
+- **Recurring production monitoring:** schedule the same authorized servers, retain trusted history, and alert a public HTTPS webhook only after report persistence succeeds.
+- **No tool execution:** inspect discovery metadata without calling exposed tools, installing packages, opening shells, or accessing private networks.
+- **Predictable cost:** HTTP-only, 256 MB, no browser, and no proxy requirement.
+
+The gate is deliberately conservative:
+
+- **ALLOW**: a reachable server matches an existing trusted baseline with no classified changes.
+- **REVIEW**: the run needs a baseline, has lower-severity drift, or could not establish a clean unchanged comparison.
+- **BLOCK**: high/critical evidence or a risk score of 60 or more requires human review before trust.
+
+Common US-market workflows include third-party MCP vendor reviews, production agent allowlists, release/CI gates, internal AI-platform governance, security evidence retention, and scheduled monitoring of customer-facing MCP endpoints.
 
 Use it to answer practical review questions:
 
@@ -55,6 +72,8 @@ The hosted Actor blocks localhost, loopback, RFC1918/private, link-local, cloud 
   "checkVulnerabilities": true,
   "checkTls": true,
   "includeRawNormalizedSnapshot": false,
+  "generateMarkdownReport": true,
+  "generateCsvReport": true,
   "requestTimeoutSeconds": 20,
   "maxRetries": 2,
   "concurrency": 5,
@@ -90,6 +109,15 @@ Unreachable, malformed, timed-out, unauthenticated, empty, incomplete, incompati
 ## Reports, persistence, and alerting
 
 Each enabled server produces one redacted Dataset `Report` containing status, reachability, concrete transport, baseline and snapshot hashes, severity, 0–100 risk score, classified changes, OSV outcomes, TLS metadata, recommendations, baseline/candidate flags, timestamps, bounded inspection metadata, and structured errors. `includeRawNormalizedSnapshot` adds the redacted canonical snapshot only when explicitly enabled.
+
+The default Key-Value Store also contains:
+
+- `OUTPUT`: machine-readable run totals, maximum risk, verdict counts, and the overall trust-gate decision;
+- `report.md`: human-readable executive report and prioritized findings when `generateMarkdownReport` is enabled;
+- `report.csv`: formula-safe decision and evidence queue when `generateCsvReport` is enabled;
+- versioned trusted and candidate baseline records only when the selected baseline mode permits writes.
+
+This gives security reviewers a readable handoff while CI, agents, APIs, and MCP-driven workflows receive a stable machine decision. Reports are decision support, not a certification that an MCP server is safe.
 
 The Actor persists the Dataset report first with `persistence.succeeded: true`. Only after that write succeeds can it deliver the optional webhook and attempt pay-per-event charges. Dataset, webhook, PPE, and finalizer waits are bounded by the same per-server deadline. If Dataset persistence fails or reaches that deadline, webhook delivery and PPE charging are suppressed for that report; the timed-out promise is rejection-safe but is not treated as durable success even if its provider later settles. Because webhook and PPE outcomes occur after the Dataset write, those late runtime fields are normally visible in logs rather than the already persisted item. Webhook or charging failure does not rewrite or invalidate a durable report.
 

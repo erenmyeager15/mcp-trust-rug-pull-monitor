@@ -14,6 +14,8 @@
   "checkVulnerabilities": false,
   "checkTls": false,
   "includeRawNormalizedSnapshot": false,
+  "generateMarkdownReport": true,
+  "generateCsvReport": true,
   "requestTimeoutSeconds": 3,
   "maxRetries": 0,
   "concurrency": 1,

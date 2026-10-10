@@ -3,6 +3,24 @@
   "title": "MCP baseline state",
   "description": "Versioned trusted and candidate normalized metadata baselines. Header values and input credentials are not stored in these records. Cross-run mutation ownership is provided by dedicated Apify Request Queues, not advisory KVS records.",
   "collections": {
+    "executiveSummary": {
+      "title": "Executive trust-gate summary",
+      "description": "Machine-readable ALLOW, REVIEW, or BLOCK decision and run totals.",
+      "key": "OUTPUT",
+      "contentTypes": ["application/json"]
+    },
+    "markdownReport": {
+      "title": "Markdown security report",
+      "description": "Human-readable decisions and prioritized security findings.",
+      "key": "report.md",
+      "contentTypes": ["text/markdown"]
+    },
+    "csvReport": {
+      "title": "CSV evidence report",
+      "description": "Formula-safe server decisions and classified findings for spreadsheets and audit queues.",
+      "key": "report.csv",
+      "contentTypes": ["text/csv"]
+    },
     "trustedBaselines": {
       "title": "Trusted baselines",
       "description": "Trusted redacted snapshots used for future drift comparisons.",

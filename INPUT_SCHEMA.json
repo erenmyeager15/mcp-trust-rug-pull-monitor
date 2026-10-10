@@ -166,6 +166,20 @@
       "default": false,
       "prefill": false
     },
+    "generateMarkdownReport": {
+      "title": "Generate executive Markdown report",
+      "type": "boolean",
+      "description": "Save a human-readable MCP security gate report with ALLOW, REVIEW, or BLOCK decisions and prioritized findings.",
+      "default": true,
+      "prefill": true
+    },
+    "generateCsvReport": {
+      "title": "Generate spreadsheet-ready CSV report",
+      "type": "boolean",
+      "description": "Save a formula-safe CSV evidence queue for security review, audit trails, and downstream automation.",
+      "default": true,
+      "prefill": true
+    },
     "requestTimeoutSeconds": {
       "title": "Request timeout",
       "type": "integer",

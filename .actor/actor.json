@@ -1,14 +1,18 @@
 {
   "actorSpecification": 1,
   "name": "mcp-trust-rug-pull-monitor",
-  "title": "MCP Server Security & Trust Monitor",
-  "description": "Monitor authorized public MCP servers for tool, schema, permission, package, TLS, and behavioral drift. Detect suspicious changes, preserve trusted baselines, and quarantine risky updates for manual approval.",
-  "version": "1.0",
+  "title": "MCP Security Monitor - Tool Drift & Trust Gates",
+  "description": "Monitor authorized MCP servers for suspicious tool-description changes, schema and permission drift, package vulnerabilities, TLS failures, and trust-baseline changes. Get ALLOW, REVIEW, or BLOCK decisions plus webhook, Markdown, and CSV evidence.",
+  "version": "1.1",
   "dockerfile": "Dockerfile",
   "input": "../INPUT_SCHEMA.json",
   "output": "./output_schema.json",
   "readme": "../README.md",
-  "categories": ["DEVELOPER_TOOLS"],
+  "exampleRunInput": {
+    "body": "{\"authorizedUseConfirmed\":true,\"servers\":[{\"name\":\"public-mcp-fixture-smoke\",\"url\":\"https://raw.githubusercontent.com/erenmyeager15/mcp-trust-rug-pull-monitor/master/src/__fixtures__/mcp-manifest.json\",\"transport\":\"static_json\",\"enabled\":true,\"tags\":[\"public-demo\"]}],\"baselineMode\":\"compare_only\",\"checkVulnerabilities\":false,\"checkTls\":false,\"generateMarkdownReport\":true,\"generateCsvReport\":true,\"requestTimeoutSeconds\":3,\"maxRetries\":0,\"concurrency\":1,\"dryRun\":true,\"allowHttp\":false,\"maxResponseBytes\":16384}",
+    "contentType": "application/json; charset=utf-8"
+  },
+  "categories": ["DEVELOPER_TOOLS", "AUTOMATION"],
   "categoriesVersion": "1.0.0",
   "storages": {
     "dataset": "./dataset_schema.json",
@@ -16,7 +20,7 @@
   },
   "defaultRunOptions": {
     "build": "latest",
-    "memoryMbytes": 512,
+    "memoryMbytes": 256,
     "timeoutSecs": 3600
   },
   "minMemoryMbytes": 256,

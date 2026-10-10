@@ -72,6 +72,8 @@ export function validateInput(raw: unknown, runtimeBaselineDefault: BaselineMode
         checkVulnerabilities: bool(root.checkVulnerabilities, true, 'checkVulnerabilities'),
         checkTls: bool(root.checkTls, true, 'checkTls'),
         includeRawNormalizedSnapshot: bool(root.includeRawNormalizedSnapshot, false, 'includeRawNormalizedSnapshot'),
+        generateMarkdownReport: bool(root.generateMarkdownReport, true, 'generateMarkdownReport'),
+        generateCsvReport: bool(root.generateCsvReport, true, 'generateCsvReport'),
         requestTimeoutSeconds: integer(root.requestTimeoutSeconds, 20, 'requestTimeoutSeconds', 1, 120),
         maxRetries: integer(root.maxRetries, 2, 'maxRetries', 0, 4),
         concurrency: integer(root.concurrency, 5, 'concurrency', 1, 10),

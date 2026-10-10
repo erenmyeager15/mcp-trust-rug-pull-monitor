@@ -29,6 +29,8 @@ export interface ActorInput {
     checkVulnerabilities: boolean;
     checkTls: boolean;
     includeRawNormalizedSnapshot: boolean;
+    generateMarkdownReport: boolean;
+    generateCsvReport: boolean;
     requestTimeoutSeconds: number;
     maxRetries: number;
     concurrency: number;

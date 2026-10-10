@@ -6,6 +6,7 @@ import { IdempotentPpeAccountant } from './ppe.js';
 import { meetsMinimumSeverity } from './risk.js';
 import { OsvProvider } from './vulnerability.js';
 import { deliverWebhook } from './webhook.js';
+import { buildExecutiveSummary, CSV_REPORT_CONTENT_TYPE, generateCsvReport, generateMarkdownReport, MARKDOWN_REPORT_CONTENT_TYPE } from './reports.js';
 import type { ActorInput, Report } from './types.js';
 
 let stopping = false;
@@ -20,7 +21,7 @@ try {
     if (stopping) throw new Error('Run stopped before monitoring began.');
     const env = Actor.getEnv();
     const runUrl = env.actorRunId ? `https://console.apify.com/view/runs/${env.actorRunId}` : undefined;
-    await monitorServers(input, {
+    const reports = await monitorServers(input, {
         baselines: new ApifyBaselineStore(input.baselineKeyValueStoreId, input.baselineRequestQueueId),
         vulnerabilityProvider: new OsvProvider(),
         ppe: new IdempotentPpeAccountant(new ApifyChargeClient()),
@@ -40,6 +41,7 @@ try {
             log.info('Server monitoring result.', { serverName: report.serverName, status: report.status, severity: report.overallSeverity, riskScore: report.riskScore, changes: report.changeCount, persisted: report.persistence?.succeeded !== false });
         },
     });
+    await saveRunReports(reports, input.generateMarkdownReport, input.generateCsvReport);
 } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown fatal Actor error';
     log.error('MCP Trust & Rug-Pull Monitor stopped safely.', { message: message.replace(/(Bearer|Basic)\s+\S+/gi, '$1 [REDACTED]') });
@@ -54,4 +56,29 @@ function shouldAlert(report: Report, input: ActorInput): boolean {
         || ['promotion_mismatch', 'unreachable', 'authentication_failed', 'unsupported_transport', 'invalid_response', 'inspection_incomplete', 'rate_limited', 'timeout', 'internal_error'].includes(report.status)
         || report.error?.code === 'baseline_migration_required'
         || report.error?.code === 'unclassified_drift';
+}
+
+async function saveRunReports(reports: Report[], includeMarkdown: boolean, includeCsv: boolean): Promise<void> {
+    try {
+        const store = await Actor.openKeyValueStore();
+        const dataset = await Actor.openDataset();
+        const summary = buildExecutiveSummary(reports);
+        const artifacts: NonNullable<typeof summary.artifacts> = {
+            datasetId: dataset.id,
+            jsonSummaryUrl: store.getPublicUrl('OUTPUT'),
+        };
+        if (includeMarkdown) {
+            await store.setValue('report.md', generateMarkdownReport(summary, reports), { contentType: MARKDOWN_REPORT_CONTENT_TYPE });
+            artifacts.markdownReportUrl = store.getPublicUrl('report.md');
+        }
+        if (includeCsv) {
+            await store.setValue('report.csv', generateCsvReport(reports), { contentType: CSV_REPORT_CONTENT_TYPE });
+            artifacts.csvReportUrl = store.getPublicUrl('report.csv');
+        }
+        summary.artifacts = artifacts;
+        await store.setValue('OUTPUT', summary);
+        log.info('MCP security gate summary saved.', { decision: summary.decision, servers: summary.servers, allow: summary.decisions.ALLOW, review: summary.decisions.REVIEW, block: summary.decisions.BLOCK });
+    } catch (error) {
+        log.warning('Per-server reports succeeded, but aggregate report artifacts could not be saved.', { message: error instanceof Error ? error.message : 'Unknown report error' });
+    }
 }

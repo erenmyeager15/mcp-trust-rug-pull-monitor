@@ -4,7 +4,7 @@
   "title": "MCP Server Trust Baseline Check",
   "options": {
     "build": "latest",
-    "memoryMbytes": 512,
+    "memoryMbytes": 256,
     "timeoutSecs": 300
   },
   "input": {

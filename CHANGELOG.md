@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 - 2026-10-11
+- Added deterministic ALLOW, REVIEW, and BLOCK trust-gate decisions across monitored servers.
+- Added machine-readable `OUTPUT`, executive Markdown, and formula-safe CSV reports.
+- Strengthened the US buyer-focused Store title, description, SEO positioning, workflows, and report documentation.
+- Reduced the browser-free HTTP runtime default from 512 MB to 256 MB.
+- Updated compatible transitive dependencies to resolve known production advisories.
+
 ## 1.0.9 - 2026-07-22
 - Fixed persistent baseline lock acquisition by constraining Request Queue client keys to Apify's 32-character API limit.
 - Made native Request Queue lock prolongation the authoritative ownership check, avoiding brittle duplicate-owner checks while preserving fail-closed writes.
