@@ -78,8 +78,6 @@
             "description": "Optional authorized request headers. The containing servers array is encrypted as secret Actor input, covering this entire object. Values must be non-empty, contain no line breaks, and be at most 4096 characters; total header names and values are limited to 8192 bytes at runtime. Host, connection, length, transfer, upgrade, proxy, TE, and trailer headers are rejected. Never put secrets in URLs, tags, or names.",
             "editor": "json",
             "maxProperties": 64,
-            "patternKey": "^[!#$%&'*+.^_`|~0-9A-Za-z-]{1,128}$",
-            "patternValue": "^[^\\r\\n]{1,4096}$",
             "additionalProperties": true
           }
         },

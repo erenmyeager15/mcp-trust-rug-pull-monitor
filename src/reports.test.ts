@@ -68,3 +68,9 @@ test('report MIME types match the Apify key-value store schema', () => {
     assert.equal(schema.collections.markdownReport.contentTypes.includes(MARKDOWN_REPORT_CONTENT_TYPE), true);
     assert.equal(schema.collections.csvReport.contentTypes.includes(CSV_REPORT_CONTENT_TYPE), true);
 });
+
+test('Actor input schema excludes removed Apify pattern keywords', () => {
+    const inputSchema = readFileSync(resolve('INPUT_SCHEMA.json'), 'utf8');
+    assert.equal(inputSchema.includes('"patternKey"'), false);
+    assert.equal(inputSchema.includes('"patternValue"'), false);
+});
